@@ -1,0 +1,37 @@
+package main
+
+import (
+	"time"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/plugins/cors"
+
+	"piled2/controllers"
+	_ "piled2/routers"
+)
+
+
+func main() {
+	beego.SetLogger("file", `{"filename":"logs/piled.log"}`)
+	// 初始化树莓派
+	controllers.Init()
+	// 注册到调用服务器
+	err := controllers.Register()
+	if err != nil {
+		go func() {
+			beego.Error("注册失败，5秒后重新尝试注册")
+			time.Sleep(5000 * time.Millisecond)
+			err1 := controllers.Register()
+			beego.Info(err1)
+		}()
+	}
+	//允许跨域调用
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
+	beego.Run()
+}
