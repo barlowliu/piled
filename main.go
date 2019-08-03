@@ -19,8 +19,8 @@ func main() {
 	err := controllers.Register()
 	if err != nil {
 		go func() {
-			beego.Error("注册失败，5秒后重新尝试注册")
-			time.Sleep(5000 * time.Millisecond)
+			beego.Error("注册失败，10秒后重新尝试注册")
+			time.Sleep(10000 * time.Millisecond)
 			err1 := controllers.Register()
 			beego.Info(err1)
 		}()
