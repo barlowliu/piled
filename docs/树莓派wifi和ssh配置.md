@@ -10,7 +10,7 @@ update_config=1
 country=CN
 
 network={
-	ssid="YAFEX-IT"
+	ssid="WW"
 	psk="12345678"
 	key_mgmt=WPA-PSK
 }
