@@ -6,8 +6,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/plugins/cors"
 
-	"piled2/controllers"
-	_ "piled2/routers"
+	"piled/controllers"
+	_ "piled/routers"
 )
 
 

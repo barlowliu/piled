@@ -19,7 +19,7 @@ import (
 func Oid2Pin(id int64) (map[int]string, int64) {
     var P map[int]string
     var gid int64 = 0 //组编号，用于后继并发控制
-    //传入的数字必须是0-56之间的正整数
+    //传入的数字必须是0-98之间的正整数
     if id > 98 || id <= 0 {
         //err := errors.New("传入的数字不是1-98之间的正整数")
         return P,gid

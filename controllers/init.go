@@ -14,7 +14,7 @@ func Init() {
 		beego.Error(err)
 		os.Exit(1)
 	}
-	defer rpio.Close()
+	//defer rpio.Close()
 	//关闭所有GPIO接口，并置为输出模式
 	for i := 0; i < 29; i++ {
 		pin := rpio.Pin(i)

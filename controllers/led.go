@@ -48,59 +48,71 @@ var (
 	Status7 bool = false
 )
 
+//Get
 func (c *LedController) Get() {
 	Msg := &Msg{
 		Code: "success",
 		Info: "打开LED成功",
 	}
-	//
-	var P map[int]string
-	var Gid int64
+	//灯序号映射为树莓派引脚的map
+	var (
+		P map[int]string
+	    Gid int64
+		Waittime int64
+		Flashtime int64
+		err error
+	)
 	//获取参数，需传入打开的灯的ID和打开时长
-	Waittime, err := strconv.ParseInt(c.Input().Get("waittime"), 10, 64)
+	Waittime, err = strconv.ParseInt(c.Input().Get("waittime"), 10, 64)
 	if err != nil {
 		beego.Info("未传入等待关闭时间或非数字错误")
+		//如果未参入等待时长，则从配置文件中获取默认等待时间
+		Waittime, err = strconv.ParseInt(beego.AppConfig.String("default_waittime"), 10, 64)
+		if err != nil {
+			beego.Error("默认等待时间default_waittime未配置或未非数字")
+		}
 	}
 	beego.Info("Waittime:" + string(Waittime))
 
-	Flashtime, err := strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
+	Flashtime, err = strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
 	if err != nil {
 		beego.Info("未传入闪烁时间或非数字错误")
 	}
 	beego.Info("Flashtime:" + string(Flashtime))
-	//从配置文件中获取默认等待时间
-	default_waittime, err := strconv.ParseInt(beego.AppConfig.String("default_waittime"), 10, 64)
-	if err != nil {
-		beego.Error("默认等待时间default_waittime未配置或未非数字")
-	}
-	//
+
 	Cid, err := strconv.ParseInt(c.Input().Get("cid"), 10, 64)
 	if err != nil {
 		beego.Info("未传入需要关闭的LED ID或参数错误")
 	} else {
 		// 如果存在Closeid则执行关闭
 		if Cid > 0 && Cid <= 98 {
-			//先获取cid对应的针脚id
+			//先获取cid对应的针脚id映射
 			P,Gid = Oid2Pin(Cid)
-			beego.Info(Gid)
+			//beego.Info(Gid)
 			res := ClosedLEDs(P)
 			beego.Info(res)
 			Msg.Code = "success"
 			Msg.Info = "关闭" + fmt.Sprintf("%d", Cid) + "号LED成功"
 			c.Ctx.Output.SetStatus(200)
+		} else {
+			Msg.Code = "error"
+			Msg.Info = "cid不是1-98的整数数字"
+			c.Ctx.Output.SetStatus(400)
 		}
 	}
 
 	Oid, err1 := strconv.ParseInt(c.Input().Get("oid"), 10, 64)
 	if err1 != nil {
+		//如果前面的cid也未传入，则直接报错
 		if err != nil {
 			Msg.Code = "error"
 			Msg.Info = "oid和cid值都非法或都不存在，将不进行任何操作"
+			beego.Error("oid和cid值都非法或都不存在，将不进行任何操作")
 			c.Ctx.Output.SetStatus(400)
-		} else {
-			beego.Info("oid值非法或不存在")
 		}
-	} else if Oid > 0 && Oid <= 98 {
+		//此种情况说明仅传入了cid，因此直接返回前面关闭是否成功消息
+		beego.Error("oid值非法或不存在，但存在Cid")
+	} else 	if Oid > 0 && Oid <= 98 {
 		//获取oid对应的Map
 		P,Gid = Oid2Pin(Oid)
 		beego.Info(Gid)
@@ -128,40 +140,29 @@ func (c *LedController) Get() {
 		time.Sleep(5 * time.Millisecond)
 		// 如果传入了闪烁时间，则在持续闪烁
 		if Flashtime > 0 {
-			if Waittime > 0 {
-				beego.Info("开始协程事务")
-				go FlashGroups(Gid, Waittime, Flashtime, P)
-				beego.Info("协程调用结束")
-				//beego.Info(res)
-				Msg.Code = "success"
-				Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
-			} else {
-				//go FlashLEDs(P, Flashtime, default_waittime)
-				beego.Info("开始协程事务")
-				go FlashGroups(Gid, default_waittime, Flashtime, P)
-				beego.Info("协程调用结束")
-				//beego.Info(res)
-				Msg.Code = "success"
-				Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", default_waittime) + "毫秒"
-			}
+			beego.Info("开始协程事务")
+			go FlashGroups(Gid, Waittime, Flashtime, P)
+			//beego.Info("协程调用结束")
+			//beego.Info(res)
+			Msg.Code = "success"
+			Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
 		} else {
 			// 如果传入了等待时间，则在等待时间后关闭LED
-			if Waittime > 0 {
-				beego.Info("开始协程事务")
-				go OpenGroups(Gid, Waittime, P)
-				beego.Info("协程调用结束")
-				Msg.Code = "success"
-				Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开" + fmt.Sprintf("%d", Waittime) + "毫秒"
-			} else {
-				beego.Info("开始协程事务")
-				go OpenGroups(Gid, default_waittime, P)
-				beego.Info("协程调用结束")
-				Msg.Code = "success"
-				Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开" + fmt.Sprintf("%d", default_waittime) + "毫秒"
-			}
+			beego.Info("开始协程事务")
+			go OpenGroups(Gid, Waittime, P)
+			//beego.Info("协程调用结束")
+			Msg.Code = "success"
+			Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并常亮" + fmt.Sprintf("%d", Waittime) + "毫秒"
 		}
 		c.Ctx.Output.SetStatus(200)
+	} else {
+		//Gid为0表示数字不在1-98这个范围，直接返回错误
+		Msg.Code = "error"
+		Msg.Info = "oid不是1-98的整数数字"
+		beego.Error("oid不是1-98的整数数字")
+		c.Ctx.Output.SetStatus(400)
 	}
+
 	//如果采用JSONP方式跨域，则使用下面返回
 	c.Data["jsonp"] = &Msg
 	c.ServeJSONP()
@@ -311,9 +312,9 @@ func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
 		Status = Status7
 	}
 	T := int(Flashtime)
-	T2 := 2 * Flashtime //2倍闪亮时间
+	Tx2 := 2 * Flashtime //2倍闪亮时间
 	var i int64
-	for i = 0; i < Waittime; i += T2 {
+	for i = 0; i < Waittime; i += Tx2 {
 		OpenLEDs(P)
 		for t := 0 ; t < T; t++ {
 			select {

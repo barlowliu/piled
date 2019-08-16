@@ -1,4 +1,4 @@
-module piled2
+module piled
 
 go 1.12
 
