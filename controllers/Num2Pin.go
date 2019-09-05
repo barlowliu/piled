@@ -57,7 +57,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         P = map[int]string{
             7:  oid2[0:1],
             8:  oid2[1:2],
-            25:  oid2[2:3],
+            25: oid2[2:3],
             24: oid2[3:4],
         }
     }
@@ -75,8 +75,8 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         beego.Info(oid2)
         P = map[int]string{
             20: oid2[0:1],
-            16:  oid2[1:2],
-            12:  oid2[2:3],
+            16: oid2[1:2],
+            12: oid2[2:3],
             1:  oid2[3:4],
         }
     }
@@ -92,10 +92,10 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         oid2 := fmt.Sprintf("%04b", id)
         beego.Info(oid2)
         P = map[int]string{
-            17:  oid2[0:1],
+            17: oid2[0:1],
             4:  oid2[1:2],
             3:  oid2[2:3],
-            2: oid2[3:4],
+            2:  oid2[3:4],
         }
     }
     if id > 56 && id <= 70 {
@@ -110,10 +110,10 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         oid2 := fmt.Sprintf("%04b", id)
         beego.Info(oid2)
         P = map[int]string{
-            9:  oid2[0:1],
+            9:   oid2[0:1],
             10:  oid2[1:2],
             22:  oid2[2:3],
-            27: oid2[3:4],
+            27:  oid2[3:4],
         }
     }
     if id > 70 && id <= 84 {
@@ -146,9 +146,9 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         oid2 := fmt.Sprintf("%04b", id)
         beego.Info(oid2)
         P = map[int]string{
-            21:  oid2[0:1],
-            26:  oid2[1:2],
-            19:  oid2[2:3],
+            21: oid2[0:1],
+            26: oid2[1:2],
+            19: oid2[2:3],
             13: oid2[3:4],
         }
     }
