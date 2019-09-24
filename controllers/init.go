@@ -25,7 +25,7 @@ func Init() {
 	var I int64
 	for I = 1; I < 99; I++ {
 		P,_ := Oid2Pin(I)
-		TestOpenLED(50, P)
+		TestOpenLED(100, P)
 	}
 }
 
