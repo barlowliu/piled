@@ -42,6 +42,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
             15: oid2[2:3],
             14: oid2[3:4],
         }
+        return P,gid
     }
     //第二组灯
     if id > 14 && id <= 28 {
@@ -60,6 +61,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
             25: oid2[2:3],
             24: oid2[3:4],
         }
+        return P,gid
     }
 
     if id > 28 && id <= 42 {
@@ -79,6 +81,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
             12: oid2[2:3],
             1:  oid2[3:4],
         }
+        return P,gid
     }
     if id > 42 && id <= 56 {
         //第四组灯
@@ -97,6 +100,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
             3:  oid2[2:3],
             2:  oid2[3:4],
         }
+        return P,gid
     }
     if id > 56 && id <= 70 {
         //第五组灯
@@ -115,6 +119,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
             22:  oid2[2:3],
             27:  oid2[3:4],
         }
+        return P,gid
     }
     if id > 70 && id <= 84 {
         //第六组灯
@@ -133,6 +138,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
             0:  oid2[2:3],
             11: oid2[3:4],
         }
+        return P,gid
     }
     if id > 84 && id <= 98 {
         //第七组灯
