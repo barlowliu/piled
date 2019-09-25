@@ -1,0 +1,101 @@
+.search-form-wrapper  {
+  padding-bottom:20px;
+}
+.table.table-scroll {
+  min-width:1200px;
+}
+.plat-span-search-g {
+    color: green;
+    margin-left: 50px;
+    display: block;
+    line-height: 30px;
+}
+.plat-span-search-r {
+    color: red;
+    margin-left: 50px;
+    display: block;
+    line-height: 30px;
+}
+.wm-messageinfo-mailtitle {
+    margin-bottom: 8px;
+    width: 60%;
+}
+.moreNotes {
+    z-index: 10;
+    width: 560px;
+    border: solid 4px #ddd;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+}
+.noteT {
+    width: 30%;
+    background-color: #C4E3F3;
+}
+.noteR {
+    width: 50%;
+    background-color: #C4E3F3;
+}
+.noteU {
+    width: 20%;
+    background-color: #C4E3F3;
+}
+.notesNum {
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    text-align: center;
+    line-height: 20px;
+    border-radius: 10px;
+    color: white;
+}
+.noNotes {
+    background-color: #C4E3F3;
+}
+.haveNotes {
+    background-color: red;
+}
+.marginTop40 {
+    margin-top: 40px;
+}
+.marginLeft15 {
+    margin-left: 15px;
+}
+.padding40 {
+    padding: 40px;
+}
+div form .uploadLabel {
+    display: inline-block;
+    width: 60%;
+}
+.margin20 {
+    margin: 20px 40px 0px;
+}
+.labelSpan {
+    display: inline-block;
+    width: 20%;
+    height: 50px;
+    text-align: center;
+    font-size: 14px;
+}
+.setNoteInfo {
+    color: #F70909;
+}
+.transHeight80 {
+    height: 80px !important;
+}
+.height600 {
+    height: 600px;
+}
+.jsTransValue {
+    display: inline-block;
+    width: 500px;
+    word-wrap:break-word;
+    line-height: 20px;
+    height: 80px;
+    background-color: white;
+    border-color: white;
+}
+.newSearchBtn {
+    width: 80%;
+}
