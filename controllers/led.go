@@ -147,7 +147,7 @@ func (c *LedController) Get() {
 			beego.Info("停止第七组协程")
 		}
 		//等待一会再开始协程事务，避免新开协程抢占此前发送的协程信号
-		time.Sleep(3 * time.Millisecond)
+		time.Sleep(5 * time.Millisecond)
 		// 如果传入了闪烁时间，则在持续闪烁
 		if Flashtime > 0 {
 			beego.Info("开始协程事务")
@@ -397,6 +397,23 @@ func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
 				}
 				Status7 = true
 			default:
+				//进入循环即设置状态为true
+				switch Gid {
+				case 1:
+					Status1 = true
+				case 2:
+					Status2 = true
+				case 3:
+					Status3 = true
+				case 4:
+					Status4 = true
+				case 5:
+					Status5 = true
+				case 6:
+					Status6 = true
+				case 7:
+					Status7 = true
+				}
 				time.Sleep(1 * time.Millisecond)
 			}
 		}
@@ -404,60 +421,40 @@ func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
 		for t := 0 ; t < T; t++ {
 			select {
 			case <-Ch1:
-				if Status1 == true {
-					beego.Info("本组其他LED开启，退出1号协程")
-					Status1 = false
-					return nil
-				}
-				Status1 = true
+				beego.Info("本组其他LED开启，退出1号协程")
+				Status1 = false
+				return nil
 			case <-Ch2:
-				if Status2 == true {
-					beego.Info("本组其他LED开启，退出2号协程")
-					Status2 = false
-					return nil
-				}
-				Status2 = true
+				beego.Info("本组其他LED开启，退出2号协程")
+				Status2 = false
+				return nil
 			case <-Ch3:
-				if Status3 == true {
-					beego.Info("本组其他LED开启，退出3号协程")
-					Status3 = false
-					return nil
-				}
-				Status3 = true
+				beego.Info("本组其他LED开启，退出3号协程")
+				Status3 = false
+				return nil
 			case <-Ch4:
-				if Status4 == true {
-					beego.Info("本组其他LED开启，退出4号协程")
-					Status4 = false
-					return nil
-				}
-				Status4 = true
+				beego.Info("本组其他LED开启，退出4号协程")
+				Status4 = false
+				return nil
 			case <-Ch5:
-				if Status5 == true {
-					beego.Info("本组其他LED开启，退出5号协程")
-					Status5 = false
-					return nil
-				}
-				Status5 = true
+				beego.Info("本组其他LED开启，退出5号协程")
+				Status5 = false
+				return nil
 			case <-Ch6:
-				if Status6 == true {
-					beego.Info("本组其他LED开启，退出6号协程")
-					Status6 = false
-					return nil
-				}
-				Status6 = true
+				beego.Info("本组其他LED开启，退出6号协程")
+				Status6 = false
+				return nil
 			case <-Ch7:
-				if Status7 == true {
-					beego.Info("本组其他LED开启，退出7号协程")
-					Status7 = false
-					return nil
-				}
-				Status7 = true
+				beego.Info("本组其他LED开启，退出7号协程")
+				Status7 = false
+				return nil
 			default:
-					time.Sleep(1 * time.Millisecond)
+				time.Sleep(1 * time.Millisecond)
 			}
 		}
 	}
-	ClosedLEDs(P)
+	str:= ClosedLEDs(P)
+	beego.Info(str)
 	switch Gid {
 	case 1:
 		Status1 = false
