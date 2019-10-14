@@ -90,6 +90,45 @@ func (c *LedController) Get() {
 			//先获取cid对应的针脚id映射
 			P,Gid = Oid2Pin(Cid)
 			//beego.Info(Gid)
+			//写协程管道，实现终止还未关闭的协程
+			switch Gid {
+			case 1:
+				//如果有同组协程未退出，则通知退出
+				if Status1 == true {
+					Ch1 <- "stop"
+					beego.Info("停止第一组协程")
+				}
+			case 2:
+				if Status2 == true {
+					Ch2 <- "stop"
+					beego.Info("停止第二组协程")
+				}
+			case 3:
+				if Status3 == true {
+					Ch3 <- "stop"
+					beego.Info("停止第三组协程")
+				}
+			case 4:
+				if Status4 == true {
+					Ch4 <- "stop"
+					beego.Info("停止第四组协程")
+				}
+			case 5:
+				if Status5 == true {
+					Ch5 <- "stop"
+					beego.Info("停止第五组协程")
+				}
+			case 6:
+				if Status6 == true {
+					Ch6 <- "stop"
+					beego.Info("停止第六组协程")
+				}
+			case 7:
+				if Status7 == true {
+					Ch7 <- "stop"
+					beego.Info("停止第七组协程")
+				}
+			}
 			res := ClosedLEDs(P)
 			beego.Info(res)
 			Msg.Code = "success"
@@ -125,26 +164,41 @@ func (c *LedController) Get() {
 		//写协程管道，实现终止还未关闭的协程
 		switch Gid {
 		case 1:
-			Ch1 <- "stop"
-			beego.Info("停止第一组协程")
+			//如果有同组协程未退出，则通知退出
+			if Status1 == true {
+				Ch1 <- "stop"
+				beego.Info("停止第一组协程")
+			}
 		case 2:
-			Ch2 <- "stop"
-			beego.Info("停止第二组协程")
+			if Status2 == true {
+				Ch2 <- "stop"
+				beego.Info("停止第二组协程")
+			}
 		case 3:
-			Ch3 <- "stop"
-			beego.Info("停止第三组协程")
+			if Status3 == true {
+				Ch3 <- "stop"
+				beego.Info("停止第三组协程")
+			}
 		case 4:
-			Ch4 <- "stop"
-			beego.Info("停止第四组协程")
+			if Status4 == true {
+				Ch4 <- "stop"
+				beego.Info("停止第四组协程")
+			}
 		case 5:
-			Ch5 <- "stop"
-			beego.Info("停止第五组协程")
+			if Status5 == true {
+				Ch5 <- "stop"
+				beego.Info("停止第五组协程")
+			}
 		case 6:
-			Ch6 <- "stop"
-			beego.Info("停止第六组协程")
+			if Status6 == true {
+				Ch6 <- "stop"
+				beego.Info("停止第六组协程")
+			}
 		case 7:
-			Ch7 <- "stop"
-			beego.Info("停止第七组协程")
+			if Status7 == true {
+				Ch7 <- "stop"
+				beego.Info("停止第七组协程")
+			}
 		}
 		//等待一会再开始协程事务，避免新开协程抢占此前发送的协程信号
 		time.Sleep(5 * time.Millisecond)
