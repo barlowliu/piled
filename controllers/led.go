@@ -235,6 +235,7 @@ func (c *LedController) Get() {
 	//c.ServeJSON()
 }
 
+
 //OpenGroups 无闪烁LED的开启控制
 //使用管道实现协程退出控制
 func  OpenGroups(Gid, Waittime int64, P map[int]string)  error {
