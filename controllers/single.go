@@ -13,7 +13,6 @@ import (
 func (c *LedController) Single() {
     Msg := &Msg{
         Code: "success",
-        Info: "打开LED成功",
     }
     //灯序号映射为树莓派引脚的map
     var (
@@ -54,7 +53,7 @@ func (c *LedController) Single() {
             ClosedLEDs(P)
             //beego.Info(res)
             Msg.Code = "success"
-            Msg.Info = "关闭" + fmt.Sprintf("%d", Cid) + "号LED成功"
+            Msg.Info = fmt.Sprintf("%v", Msg.Info) + "关闭" + fmt.Sprintf("%d", Cid) + "号LED成功"
             beego.Info(Msg.Info)
             c.Ctx.Output.SetStatus(200)
         } else {
@@ -69,7 +68,7 @@ func (c *LedController) Single() {
         //如果前面的cid也未传入，则直接报错
         if err != nil {
             Msg.Code = "error"
-            Msg.Info = "oid和cid值都非法或都不存在，将不进行任何操作"
+            Msg.Info = fmt.Sprintf("%v", Msg.Info) + "oid和cid值都非法或都不存在，将不进行任何操作"
             beego.Error("oid和cid值都非法或都不存在，将不进行任何操作")
             c.Ctx.Output.SetStatus(400)
         }
@@ -86,27 +85,25 @@ func (c *LedController) Single() {
         P,Gid = Oid2Pin(Oid)
         // 如果传入了闪烁时间，则在持续闪烁
         if Flashtime > 0 {
-            beego.Info("开始协程事务")
             FlashGroups(Gid, Waittime, Flashtime, P)
             //beego.Info("协程调用结束")
             //beego.Info(res)
             Msg.Code = "success"
-            Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
+            Msg.Info = fmt.Sprintf("%v", Msg.Info) + fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
             beego.Info(Msg.Info)
         } else {
             // 如果传入了等待时间，则在等待时间后关闭LED
-            beego.Info("开始第",Gid ,"组协程事务")
             OpenLeds(Gid, Waittime, P)
             //beego.Info("协程调用结束")
             Msg.Code = "success"
-            Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并常亮" + fmt.Sprintf("%d", Waittime) + "毫秒"
+            Msg.Info = fmt.Sprintf("%v", Msg.Info) + fmt.Sprintf("%d", Oid) + "号LED已打开并常亮" + fmt.Sprintf("%d", Waittime) + "毫秒"
             beego.Info(Msg.Info)
         }
         c.Ctx.Output.SetStatus(200)
     } else {
         //Gid为0表示数字不在1-98这个范围，直接返回错误
         Msg.Code = "error"
-        Msg.Info = "oid不是1-98的整数数字"
+        Msg.Info = fmt.Sprintf("%v", Msg.Info) + "oid不是1-98的整数数字"
         beego.Error("oid不是1-98的整数数字")
         c.Ctx.Output.SetStatus(400)
     }
