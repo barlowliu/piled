@@ -4,6 +4,7 @@ import (
     "errors"
     "fmt"
     "github.com/astaxie/beego"
+    "github.com/stianeikeland/go-rpio"
     "strconv"
     "time"
 )
@@ -13,6 +14,7 @@ import (
 func (c *LedController) Single() {
     Msg := &Msg{
         Code: "success",
+        //Info: "",
     }
     //灯序号映射为树莓派引脚的map
     var (
@@ -75,12 +77,17 @@ func (c *LedController) Single() {
         //此种情况说明仅传入了cid，因此直接返回前面关闭是否成功消息
         beego.Error("oid值非法或不存在，但存在Cid")
     } else 	if Oid > 0 && Oid <= 98 {
-        //关闭所有灯
-        var I int64
-        for I = 1; I < 99; I++ {
-            P,_ := Oid2Pin(I)
-            ClosedLEDs(P)
+        ////关闭所有灯
+        for i := 0; i < 29; i++ {
+            pin := rpio.Pin(i)
+            //pin.Mode(rpio.Output)
+            pin.Write(rpio.Low)
         }
+        //var I int64
+        //for I = 1; I < 99; I++ {
+        //    P,_ := Oid2Pin(I)
+        //    ClosedLEDs(P)
+        //}
         //获取oid对应的Map
         P,Gid = Oid2Pin(Oid)
         // 如果传入了闪烁时间，则在持续闪烁
