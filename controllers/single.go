@@ -4,7 +4,6 @@ import (
     "errors"
     "fmt"
     "github.com/astaxie/beego"
-    "github.com/stianeikeland/go-rpio"
     "strconv"
     "time"
 )
@@ -78,11 +77,11 @@ func (c *LedController) Single() {
         beego.Error("oid值非法或不存在，但存在Cid")
     } else 	if Oid > 0 && Oid <= 98 {
         ////关闭所有灯
-        for i := 0; i < 29; i++ {
-            pin := rpio.Pin(i)
-            //pin.Mode(rpio.Output)
-            pin.Write(rpio.Low)
-        }
+        //for i := 0; i < 29; i++ {
+        //    pin := rpio.Pin(i)
+        //    //pin.Mode(rpio.Output)
+        //    pin.Write(rpio.Low)
+        //}
         //var I int64
         //for I = 1; I < 99; I++ {
         //    P,_ := Oid2Pin(I)
