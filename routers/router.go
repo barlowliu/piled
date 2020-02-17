@@ -8,5 +8,6 @@ import (
 func init() {
 	beego.Router("/", &controllers.MainController{})
 	beego.Router("/led", &controllers.LedController{})
+	beego.AutoRouter(&controllers.LedController{})
 	beego.Router("/net", &controllers.NetController{})
 }
