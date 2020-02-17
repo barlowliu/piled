@@ -5,7 +5,6 @@ package controllers
 
 import (
     "fmt"
-    "github.com/astaxie/beego"
 )
 
 //Oid2Pin() 传入Oid，转换为对应的灯编码map输出
@@ -35,7 +34,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             23: oid2[0:1],
             18: oid2[1:2],
@@ -54,7 +53,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             7:  oid2[0:1],
             8:  oid2[1:2],
@@ -74,7 +73,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             20: oid2[0:1],
             16: oid2[1:2],
@@ -93,7 +92,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             17: oid2[0:1],
             4:  oid2[1:2],
@@ -112,7 +111,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             9:   oid2[0:1],
             10:  oid2[1:2],
@@ -131,7 +130,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             6:  oid2[0:1],
             5:  oid2[1:2],
@@ -150,7 +149,7 @@ func Oid2Pin(id int64) (map[int]string, int64) {
         }
         //转换二进制
         oid2 := fmt.Sprintf("%04b", id)
-        beego.Info(oid2)
+        //beego.Info(oid2)
         P = map[int]string{
             21: oid2[0:1],
             26: oid2[1:2],

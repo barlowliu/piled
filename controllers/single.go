@@ -126,8 +126,8 @@ func  FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string)  error {
         ClosedLEDs(P)
         time.Sleep(time.Duration(T)  * time.Millisecond)
     }
-    str:= ClosedLEDs(P)
-    beego.Info(str)
+    ClosedLEDs(P)
+    //beego.Info(str)
     f := fmt.Sprintf("第%d组第%d 号灯闪烁时长%d 毫秒后正常关闭",Gid, P, Waittime)
     err := errors.New(f)
     //fmt.Println(err)
