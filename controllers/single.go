@@ -19,12 +19,12 @@ func (c *LedController) Single() {
     var (
         P map[int]string
         Gid int64
-        Waittime int64
-        Flashtime int64
+        //Waittime int64
+        //Flashtime int64
         err error
     )
     //获取参数，需传入打开的灯的ID和打开时长
-    Waittime, err = strconv.ParseInt(c.Input().Get("waittime"), 10, 64)
+    Waittime, err := strconv.ParseInt(c.Input().Get("waittime"), 10, 64)
     beego.Info("亮灯时长为：", Waittime)
     if err != nil {
         beego.Info("未传入等待关闭时间或非数字错误")
@@ -36,7 +36,8 @@ func (c *LedController) Single() {
     }
     //beego.Info("Waittime:" + strconv.FormatInt(Waittime,10))
 
-    Flashtime, err = strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
+    Flashtime, err := strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
+    beego.Info("闪烁间隔：", Flashtime)
     if err != nil {
         beego.Info("未传入闪烁时间或非数字错误")
     }
@@ -54,6 +55,7 @@ func (c *LedController) Single() {
             //beego.Info(res)
             Msg.Code = "success"
             Msg.Info = "关闭" + fmt.Sprintf("%d", Cid) + "号LED成功"
+            beego.Info(Msg.Info)
             c.Ctx.Output.SetStatus(200)
         } else {
             Msg.Code = "error"
@@ -90,6 +92,7 @@ func (c *LedController) Single() {
             //beego.Info(res)
             Msg.Code = "success"
             Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
+            beego.Info(Msg.Info)
         } else {
             // 如果传入了等待时间，则在等待时间后关闭LED
             beego.Info("开始第",Gid ,"组协程事务")
@@ -97,6 +100,7 @@ func (c *LedController) Single() {
             //beego.Info("协程调用结束")
             Msg.Code = "success"
             Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并常亮" + fmt.Sprintf("%d", Waittime) + "毫秒"
+            beego.Info(Msg.Info)
         }
         c.Ctx.Output.SetStatus(200)
     } else {
