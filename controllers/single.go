@@ -136,6 +136,7 @@ func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					f := fmt.Sprintf("关闭第%d组协程", Gid)
 					err := errors.New(f)
 					beego.Info(err)
+					Status = false
 					return err
 				}
 				Status = true
@@ -153,6 +154,7 @@ func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				f := fmt.Sprintf("关闭第%d组协程", Gid)
 				err := errors.New(f)
 				beego.Info(err)
+				Status = false
 				return err
 			default:
 				time.Sleep(1 * time.Millisecond)
