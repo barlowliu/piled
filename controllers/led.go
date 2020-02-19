@@ -25,6 +25,7 @@ import (
 type LedController struct {
 	beego.Controller
 }
+
 //返回信息
 type Msg struct {
 	Code string
@@ -33,13 +34,13 @@ type Msg struct {
 
 //协程管道控制全局变量
 var (
-	Ch1  = make(chan string, 1)
-	Ch2  = make(chan string, 1)
-	Ch3  = make(chan string, 1)
-	Ch4  = make(chan string, 1)
-	Ch5  = make(chan string, 1)
-	Ch6  = make(chan string, 1)
-	Ch7  = make(chan string, 1)
+	Ch1          = make(chan string, 1)
+	Ch2          = make(chan string, 1)
+	Ch3          = make(chan string, 1)
+	Ch4          = make(chan string, 1)
+	Ch5          = make(chan string, 1)
+	Ch6          = make(chan string, 1)
+	Ch7          = make(chan string, 1)
 	Status1 bool = false
 	Status2 bool = false
 	Status3 bool = false
@@ -57,11 +58,11 @@ func (c *LedController) Get() {
 	}
 	//灯序号映射为树莓派引脚的map
 	var (
-		P map[int]string
-	    Gid int64
-		Waittime int64
+		P         map[int]string
+		Gid       int64
+		Waittime  int64
 		Flashtime int64
-		err error
+		err       error
 	)
 	//获取参数，需传入打开的灯的ID和打开时长
 	Waittime, err = strconv.ParseInt(c.Input().Get("waittime"), 10, 64)
@@ -73,13 +74,13 @@ func (c *LedController) Get() {
 			beego.Error("默认等待时间default_waittime未配置或未非数字")
 		}
 	}
-	beego.Info("Waittime:" + strconv.FormatInt(Waittime,10))
+	beego.Info("Waittime:" + strconv.FormatInt(Waittime, 10))
 
 	Flashtime, err = strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
 	if err != nil {
 		beego.Info("未传入闪烁时间或非数字错误")
 	}
-	beego.Info("Flashtime:" + strconv.FormatInt(Flashtime,10))
+	beego.Info("Flashtime:" + strconv.FormatInt(Flashtime, 10))
 
 	Cid, err := strconv.ParseInt(c.Input().Get("cid"), 10, 64)
 	if err != nil {
@@ -88,7 +89,7 @@ func (c *LedController) Get() {
 		// 如果存在Closeid则执行关闭
 		if Cid > 0 && Cid <= 98 {
 			//先获取cid对应的针脚id映射
-			P,Gid = Oid2Pin(Cid)
+			P, Gid = Oid2Pin(Cid)
 			//beego.Info(Gid)
 			//写协程管道，实现终止还未关闭的协程
 			switch Gid {
@@ -152,9 +153,9 @@ func (c *LedController) Get() {
 		}
 		//此种情况说明仅传入了cid，因此直接返回前面关闭是否成功消息
 		beego.Error("oid值非法或不存在，但存在Cid")
-	} else 	if Oid > 0 && Oid <= 98 {
+	} else if Oid > 0 && Oid <= 98 {
 		//获取oid对应的Map
-		P,Gid = Oid2Pin(Oid)
+		P, Gid = Oid2Pin(Oid)
 		beego.Info(Gid)
 		beego.Info(P)
 		fmt.Println("读取GPIO状态")
@@ -212,7 +213,7 @@ func (c *LedController) Get() {
 			Msg.Info = fmt.Sprintf("%d", Oid) + "号LED已打开并将闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
 		} else {
 			// 如果传入了等待时间，则在等待时间后关闭LED
-			beego.Info("开始第",Gid ,"组协程事务")
+			beego.Info("开始第", Gid, "组协程事务")
 			go OpenGroups(Gid, Waittime, P)
 			//beego.Info("协程调用结束")
 			Msg.Code = "success"
@@ -235,10 +236,9 @@ func (c *LedController) Get() {
 	//c.ServeJSON()
 }
 
-
 //OpenGroups 无闪烁LED的开启控制
 //使用管道实现协程退出控制
-func  OpenGroups(Gid, Waittime int64, P map[int]string)  error {
+func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 	OpenLEDs(P)
 	var T int64 = 0
 	for {
@@ -401,13 +401,13 @@ func  OpenGroups(Gid, Waittime int64, P map[int]string)  error {
 
 //FlashGroups 闪烁LED的开启控制
 //使用管道实现协程退出控制
-func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
+func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 	T := int(Flashtime)
 	Tx2 := 2 * Flashtime //2倍闪亮时间
 	var i int64
 	for i = 0; i < Waittime; i += Tx2 {
 		OpenLEDs(P)
-		for t := 0 ; t < T; t++ {
+		for t := 0; t < T; t++ {
 			switch Gid {
 			case 1:
 				select {
@@ -513,7 +513,7 @@ func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
 			}
 		}
 		ClosedLEDs(P)
-		for t := 0 ; t < T; t++ {
+		for t := 0; t < T; t++ {
 			switch Gid {
 			case 1:
 				select {
@@ -581,7 +581,7 @@ func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
 			}
 		}
 	}
-	str:= ClosedLEDs(P)
+	str := ClosedLEDs(P)
 	beego.Info(str)
 	switch Gid {
 	case 1:
@@ -599,10 +599,10 @@ func  FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string)  error {
 	case 7:
 		Status7 = false
 	}
-	f := fmt.Sprintf("第%d组第%d 号灯闪烁时长%d 毫秒后正常关闭",Gid, P, Waittime)
+	f := fmt.Sprintf("第%d组第%d 号灯闪烁时长%d 毫秒后正常关闭", Gid, P, Waittime)
 	err := errors.New(f)
 	fmt.Println(err)
-	return  err
+	return err
 }
 
 // OpenLED() 打开LED
@@ -630,7 +630,7 @@ func ClosedLEDs(P map[int]string) string {
 }
 
 //ReadPinStatus() 读取引脚状态
-func ReadPinStatus(P map[int]string)  {
+func ReadPinStatus(P map[int]string) {
 	for k, _ := range P {
 		pin := rpio.Pin(k)
 		fmt.Println(pin.Read())

@@ -24,13 +24,13 @@ func Init() {
 	//依次点亮所有led指示灯，量100毫秒
 	var I int64
 	for I = 1; I < 99; I++ {
-		P,_ := Oid2Pin(I)
+		P, _ := Oid2Pin(I)
 		TestOpenLED(100, P)
 	}
 }
 
 //TestOpenLED 不闪烁开启一段时间LED后关闭
-func TestOpenLED(Waittime int64, P map[int]string) string{
+func TestOpenLED(Waittime int64, P map[int]string) string {
 	OpenLEDs(P)
 	time.Sleep(time.Duration(Waittime) * time.Millisecond)
 	ClosedLEDs(P)
