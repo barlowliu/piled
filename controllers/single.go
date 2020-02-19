@@ -51,7 +51,7 @@ func (c *LedController) Single() {
 			if Status == true {
 				Ch <- "stop"
 			}
-			//time.Sleep(3 * time.Millisecond) //等待协程关闭
+			time.Sleep(8 * time.Millisecond) //等待协程关闭
 			//先获取cid对应的针脚id映射
 			P, Gid = Oid2Pin(Cid)
 			ClosedLEDs(P)
@@ -83,7 +83,7 @@ func (c *LedController) Single() {
 		if Status == true {
 			Ch <- "stop"
 		}
-		time.Sleep(10 * time.Millisecond) //等待协程关闭
+		time.Sleep(8 * time.Millisecond) //等待协程关闭
 		//关闭所有灯
 		//for i := 0; i < 29; i++ {
 		//	pin := rpio.Pin(i)
