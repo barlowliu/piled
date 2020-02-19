@@ -10,7 +10,6 @@ import (
 	_ "piled/routers"
 )
 
-
 func main() {
 	beego.SetLogger("file", `{"filename":"logs/piled.log"}`)
 	// 初始化树莓派
