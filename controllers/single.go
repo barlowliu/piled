@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	Ch          = make(chan string, 1)
+	Ch          = make(chan string)
 	Status bool = false
 )
 
@@ -38,7 +38,7 @@ func (c *LedController) Single() {
 	//获取闪烁间隔时间
 	Flashtime, err := strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
 	if err != nil || Flashtime < 20 {
-		beego.Info("未传入闪烁时间、或者为非数字错误、或者小于20毫秒")
+		//beego.Info("未传入闪烁时间、或者为非数字错误、或者小于20毫秒")
 		Flashtime = 0
 	}
 	//获取关闭的灯
@@ -89,14 +89,14 @@ func (c *LedController) Single() {
 		P, Gid = Oid2Pin(Oid)
 		// 如果传入了闪烁时间并且大于20毫秒，则闪烁
 		if Flashtime > 20 {
-			go FlashLeds(Gid, Waittime, Flashtime, P)              //开启闪烁协程
-			time.Sleep(time.Duration(Waittime) * time.Millisecond) //等待闪烁结束
+			go FlashLeds(Gid, Waittime, Flashtime, P) //开启闪烁协程
+			//time.Sleep(time.Duration(Waittime) * time.Millisecond) //等待闪烁结束
 			Msg.Code = "success"
 			Msg.Info = fmt.Sprintf("%v;", Msg.Info) + fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
 			beego.Info(Msg.Info)
 		} else {
 			// 如果传入了等待时间，则在等待时间后关闭LED
-			OpenLeds(Gid, Waittime, P)
+			go OpenLeds(Gid, Waittime, P)
 			//beego.Info("协程调用结束")
 			Msg.Code = "success"
 			Msg.Info = fmt.Sprintf("%v;", Msg.Info) + fmt.Sprintf("%d", Oid) + "号LED已打开并常亮" + fmt.Sprintf("%d", Waittime) + "毫秒"
@@ -127,21 +127,18 @@ func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
 	var i int64
 	for i = 0; i < Waittime; i += Tx2 {
 		OpenLEDs(P)
+		Status = true
 		j := i //控制循环内部时长,避免延迟关闭
 		for t := 0; t < T && j < Waittime; t++ {
 			select {
 			case <-Ch:
-				if Status == true {
-					ClosedLEDs(P)
-					f := fmt.Sprintf("关闭第%d组协程", Gid)
-					err := errors.New(f)
-					beego.Info(err)
-					Status = false
-					return err
-				}
-				Status = true
+				ClosedLEDs(P)
+				Status = false
+				f := fmt.Sprintf("关闭第%d组协程", Gid)
+				err := errors.New(f)
+				beego.Info(err)
+				return err
 			default:
-				Status = true
 				time.Sleep(1 * time.Millisecond)
 				j++
 			}
@@ -150,7 +147,6 @@ func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
 		for t := 0; t < T && j < Waittime; t++ {
 			select {
 			case <-Ch:
-				Status = false
 				f := fmt.Sprintf("关闭第%d组协程", Gid)
 				err := errors.New(f)
 				beego.Info(err)
@@ -167,14 +163,41 @@ func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
 	return nil
 }
 
-//OpenLeds 闪烁LED的开启控制
+////OpenLeds 闪烁LED的开启控制
+////使用管道实现协程退出控制
+//func OpenLeds(Gid, Waittime int64, P map[int]string) error {
+//	var T = int(Waittime)
+//	OpenLEDs(P)
+//	time.Sleep(time.Duration(T) * time.Millisecond)
+//	ClosedLEDs(P)
+//	f := fmt.Sprintf("第%d组第%d 号灯闪烁时长%d 毫秒后正常关闭", Gid, P, Waittime)
+//	err := errors.New(f)
+//	return err
+//}
+
+//OpenLeds 无闪烁LED的开启控制
 //使用管道实现协程退出控制
 func OpenLeds(Gid, Waittime int64, P map[int]string) error {
-	var T = int(Waittime)
 	OpenLEDs(P)
-	time.Sleep(time.Duration(T) * time.Millisecond)
-	ClosedLEDs(P)
-	f := fmt.Sprintf("第%d组第%d 号灯闪烁时长%d 毫秒后正常关闭", Gid, P, Waittime)
-	err := errors.New(f)
-	return err
+	var T int64 = 0
+	Status = true
+	for {
+		select {
+		case <-Ch:
+			ClosedLEDs(P)
+			Status = false
+			f := fmt.Sprintf("第%d组协程被中断", Gid)
+			err := errors.New(f)
+			beego.Error(err)
+			return err
+		default:
+			if T >= Waittime {
+				ClosedLEDs(P)
+				Status = false
+				return nil
+			}
+			time.Sleep(1 * time.Millisecond)
+			T++
+		}
+	}
 }
