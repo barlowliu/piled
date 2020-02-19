@@ -92,7 +92,7 @@ func (c *LedController) Single() {
         P,Gid = Oid2Pin(Oid)
         // 如果传入了闪烁时间并且大于10毫秒，则在持续闪烁
         if Flashtime > 20 {
-            FlashGroups(Gid, Waittime, Flashtime, P)
+            FlashLeds(Gid, Waittime, Flashtime, P)
             //beego.Info("协程调用结束")
             //beego.Info(res)
             Msg.Code = "success"
