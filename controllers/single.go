@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/stianeikeland/go-rpio"
 	"strconv"
 	"time"
 )
@@ -48,6 +47,11 @@ func (c *LedController) Single() {
 	} else {
 		// 如果存在Closeid则执行关闭
 		if Cid > 0 && Cid <= 98 {
+			//停止协程
+			if Status == true {
+				Ch <- "stop"
+			}
+			//time.Sleep(3 * time.Millisecond) //等待协程关闭
 			//先获取cid对应的针脚id映射
 			P, Gid = Oid2Pin(Cid)
 			ClosedLEDs(P)
@@ -75,28 +79,28 @@ func (c *LedController) Single() {
 		//此种情况说明仅传入了cid，因此直接返回前面关闭是否成功消息
 		beego.Error("oid值非法或不存在，但存在Cid")
 	} else if Oid > 0 && Oid <= 98 {
-		//停止闪烁协程
+		//停止协程
 		if Status == true {
 			Ch <- "stop"
 		}
-		time.Sleep(5 * time.Millisecond) //等待协程关闭
+		time.Sleep(10 * time.Millisecond) //等待协程关闭
 		//关闭所有灯
-		for i := 0; i < 29; i++ {
-			pin := rpio.Pin(i)
-			pin.Write(rpio.Low)
-		}
+		//for i := 0; i < 29; i++ {
+		//	pin := rpio.Pin(i)
+		//	pin.Write(rpio.Low)
+		//}
 		//获取oid对应的Map
 		P, Gid = Oid2Pin(Oid)
 		// 如果传入了闪烁时间并且大于20毫秒，则闪烁
 		if Flashtime > 20 {
-			go FlashLeds(Gid, Waittime, Flashtime, P) //开启闪烁协程
+			go Flashs(Gid, Waittime, Flashtime, P) //开启闪烁协程
 			//time.Sleep(time.Duration(Waittime) * time.Millisecond) //等待闪烁结束
 			Msg.Code = "success"
 			Msg.Info = fmt.Sprintf("%v;", Msg.Info) + fmt.Sprintf("%d", Oid) + "号LED已打开并闪烁" + fmt.Sprintf("%d", Waittime) + "毫秒"
 			beego.Info(Msg.Info)
 		} else {
 			// 如果传入了等待时间，则在等待时间后关闭LED
-			go OpenLeds(Gid, Waittime, P)
+			go Opens(Gid, Waittime, P)
 			//beego.Info("协程调用结束")
 			Msg.Code = "success"
 			Msg.Info = fmt.Sprintf("%v;", Msg.Info) + fmt.Sprintf("%d", Oid) + "号LED已打开并常亮" + fmt.Sprintf("%d", Waittime) + "毫秒"
@@ -119,9 +123,9 @@ func (c *LedController) Single() {
 	//c.ServeJSON()
 }
 
-//FlashLeds 闪烁LED的开启控制
+//Flashs 闪烁LED的开启控制
 //使用管道实现协程退出控制
-func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
+func Flashs(Gid, Waittime, Flashtime int64, P map[int]string) error {
 	T := int(Flashtime)
 	Tx2 := 2 * Flashtime //2倍闪亮时间
 	var i int64
@@ -175,9 +179,9 @@ func FlashLeds(Gid, Waittime, Flashtime int64, P map[int]string) error {
 //	return err
 //}
 
-//OpenLeds 无闪烁LED的开启控制
+//Opens 无闪烁LED的开启控制
 //使用管道实现协程退出控制
-func OpenLeds(Gid, Waittime int64, P map[int]string) error {
+func Opens(Gid, Waittime int64, P map[int]string) error {
 	OpenLEDs(P)
 	var T int64 = 0
 	Status = true
