@@ -67,20 +67,20 @@ func (c *LedController) Get() {
 	//获取参数，需传入打开的灯的ID和打开时长
 	Waittime, err = strconv.ParseInt(c.Input().Get("waittime"), 10, 64)
 	if err != nil {
-		beego.Info("未传入等待关闭时间或非数字错误")
+		beego.Info("未传入等待关闭时间或非数字错误，将使用默认值")
 		//如果未参入等待时长，则从配置文件中获取默认等待时间
 		Waittime, err = strconv.ParseInt(beego.AppConfig.String("default_waittime"), 10, 64)
 		if err != nil {
 			beego.Error("默认等待时间default_waittime未配置或未非数字")
 		}
 	}
-	beego.Info("Waittime:" + strconv.FormatInt(Waittime, 10))
+	//beego.Info("Waittime:" + strconv.FormatInt(Waittime, 10))
 
 	Flashtime, err = strconv.ParseInt(c.Input().Get("flashtime"), 10, 64)
 	if err != nil {
 		beego.Info("未传入闪烁时间或非数字错误")
 	}
-	beego.Info("Flashtime:" + strconv.FormatInt(Flashtime, 10))
+	//beego.Info("Flashtime:" + strconv.FormatInt(Flashtime, 10))
 
 	Cid, err := strconv.ParseInt(c.Input().Get("cid"), 10, 64)
 	if err != nil {
@@ -149,8 +149,6 @@ func (c *LedController) Get() {
 	} else if Oid > 0 && Oid <= 98 {
 		//获取oid对应的Map
 		P, Gid = Oid2Pin(Oid)
-		//beego.Info(Gid)
-		//beego.Info(P)
 		//fmt.Println("读取GPIO状态")
 		//ReadPinStatus(P)
 		//写协程管道，实现终止还未关闭的协程
@@ -232,7 +230,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status1 == true {
 					ClosedLEDs(P)
 					Status1 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status1 = true
@@ -252,7 +250,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status2 == true {
 					ClosedLEDs(P)
 					Status2 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status2 = true
@@ -272,7 +270,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status3 == true {
 					ClosedLEDs(P)
 					Status3 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status3 = true
@@ -292,7 +290,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status4 == true {
 					ClosedLEDs(P)
 					Status4 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status4 = true
@@ -312,7 +310,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status5 == true {
 					ClosedLEDs(P)
 					Status5 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status5 = true
@@ -332,7 +330,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status6 == true {
 					ClosedLEDs(P)
 					Status6 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status6 = true
@@ -352,7 +350,7 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 				if Status7 == true {
 					ClosedLEDs(P)
 					Status7 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				}
 				Status7 = true
@@ -392,7 +390,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status1 == true {
 						ClosedLEDs(P)
 						Status1 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status1 = true
@@ -407,7 +405,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status2 == true {
 						ClosedLEDs(P)
 						Status2 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status2 = true
@@ -422,7 +420,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status3 == true {
 						ClosedLEDs(P)
 						Status3 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status3 = true
@@ -437,7 +435,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status4 == true {
 						ClosedLEDs(P)
 						Status4 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status4 = true
@@ -452,7 +450,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status5 == true {
 						ClosedLEDs(P)
 						Status5 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status5 = true
@@ -467,7 +465,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status6 == true {
 						ClosedLEDs(P)
 						Status6 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status6 = true
@@ -482,7 +480,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					if Status7 == true {
 						ClosedLEDs(P)
 						Status7 = false
-						beego.Info(err)
+						beego.Info(f)
 						return err
 					}
 					Status7 = true
@@ -503,7 +501,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch1:
 					Status1 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
@@ -513,7 +511,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch2:
 					Status2 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
@@ -523,7 +521,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch3:
 					Status3 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
@@ -533,7 +531,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch4:
 					Status4 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
@@ -543,7 +541,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch5:
 					Status5 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
@@ -553,7 +551,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch6:
 					Status6 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
@@ -563,7 +561,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				select {
 				case <-Ch7:
 					Status7 = false
-					beego.Info(err)
+					beego.Info(f)
 					return err
 				default:
 					time.Sleep(1 * time.Millisecond)
