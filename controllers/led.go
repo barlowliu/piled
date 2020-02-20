@@ -221,148 +221,127 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 	OpenLEDs(P)
 	var T int64 = 0
 	for {
-		f := fmt.Sprintf("第%d组协程被关闭", Gid)
+		f := fmt.Sprintf("第%d其他LED开启，协程被中断", Gid)
 		err := errors.New(f)
 		switch Gid {
 		case 1:
 			select {
 			case <-Ch1:
-				if Status1 == true {
-					ClosedLEDs(P)
-					Status1 = false
-					beego.Info(f)
-					return err
-				}
-				Status1 = true
+				ClosedLEDs(P)
+				Status1 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status1 = false
 					return nil
 				}
+				Status1 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status1 = true
 			}
 		case 2:
 			select {
 			case <-Ch2:
-				if Status2 == true {
-					ClosedLEDs(P)
-					Status2 = false
-					beego.Info(f)
-					return err
-				}
-				Status2 = true
+				ClosedLEDs(P)
+				Status2 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status2 = false
 					return nil
 				}
+				Status2 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status2 = true
 			}
 		case 3:
 			select {
 			case <-Ch3:
-				if Status3 == true {
-					ClosedLEDs(P)
-					Status3 = false
-					beego.Info(f)
-					return err
-				}
-				Status3 = true
+				ClosedLEDs(P)
+				Status3 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status3 = false
 					return nil
 				}
+				Status3 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status3 = true
 			}
 		case 4:
 			select {
 			case <-Ch4:
-				if Status4 == true {
-					ClosedLEDs(P)
-					Status4 = false
-					beego.Info(f)
-					return err
-				}
-				Status4 = true
+				ClosedLEDs(P)
+				Status4 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status4 = false
 					return nil
 				}
+				Status4 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status4 = true
 			}
 		case 5:
 			select {
 			case <-Ch5:
-				if Status5 == true {
-					ClosedLEDs(P)
-					Status5 = false
-					beego.Info(f)
-					return err
-				}
-				Status5 = true
+				ClosedLEDs(P)
+				Status5 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status5 = false
 					return nil
 				}
+				Status5 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status5 = true
 			}
 		case 6:
 			select {
 			case <-Ch6:
-				if Status6 == true {
-					ClosedLEDs(P)
-					Status6 = false
-					beego.Info(f)
-					return err
-				}
-				Status6 = true
+				ClosedLEDs(P)
+				Status6 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status6 = false
 					return nil
 				}
+				Status6 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status6 = true
 			}
 		case 7:
 			select {
 			case <-Ch7:
-				if Status7 == true {
-					ClosedLEDs(P)
-					Status7 = false
-					beego.Info(f)
-					return err
-				}
-				Status7 = true
+				ClosedLEDs(P)
+				Status7 = false
+				beego.Info(f)
+				return err
 			default:
 				if T >= Waittime {
 					ClosedLEDs(P)
 					Status7 = false
 					return nil
 				}
+				Status7 = true
 				time.Sleep(1 * time.Millisecond)
 				T++
-				Status7 = true
 			}
 		default:
 			err = errors.New("Gid错误")
@@ -387,13 +366,11 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 1:
 				select {
 				case <-Ch1:
-					if Status1 == true {
-						ClosedLEDs(P)
-						Status1 = false
-						beego.Info(f)
-						return err
-					}
-					Status1 = true
+					ClosedLEDs(P)
+					Status1 = false
+					beego.Info(f)
+					return err
+
 				default:
 					Status1 = true
 					time.Sleep(1 * time.Millisecond)
@@ -402,13 +379,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 2:
 				select {
 				case <-Ch2:
-					if Status2 == true {
-						ClosedLEDs(P)
-						Status2 = false
-						beego.Info(f)
-						return err
-					}
-					Status2 = true
+					ClosedLEDs(P)
+					Status2 = false
+					beego.Info(f)
+					return err
 				default:
 					Status2 = true
 					time.Sleep(1 * time.Millisecond)
@@ -417,13 +391,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 3:
 				select {
 				case <-Ch3:
-					if Status3 == true {
-						ClosedLEDs(P)
-						Status3 = false
-						beego.Info(f)
-						return err
-					}
-					Status3 = true
+					ClosedLEDs(P)
+					Status3 = false
+					beego.Info(f)
+					return err
 				default:
 					Status3 = true
 					time.Sleep(1 * time.Millisecond)
@@ -432,13 +403,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 4:
 				select {
 				case <-Ch4:
-					if Status4 == true {
-						ClosedLEDs(P)
-						Status4 = false
-						beego.Info(f)
-						return err
-					}
-					Status4 = true
+					ClosedLEDs(P)
+					Status4 = false
+					beego.Info(f)
+					return err
 				default:
 					Status4 = true
 					time.Sleep(1 * time.Millisecond)
@@ -447,13 +415,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 5:
 				select {
 				case <-Ch5:
-					if Status5 == true {
-						ClosedLEDs(P)
-						Status5 = false
-						beego.Info(f)
-						return err
-					}
-					Status5 = true
+					ClosedLEDs(P)
+					Status5 = false
+					beego.Info(f)
+					return err
 				default:
 					Status5 = true
 					time.Sleep(1 * time.Millisecond)
@@ -462,13 +427,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 6:
 				select {
 				case <-Ch6:
-					if Status6 == true {
-						ClosedLEDs(P)
-						Status6 = false
-						beego.Info(f)
-						return err
-					}
-					Status6 = true
+					ClosedLEDs(P)
+					Status6 = false
+					beego.Info(f)
+					return err
 				default:
 					Status6 = true
 					time.Sleep(1 * time.Millisecond)
@@ -477,13 +439,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			case 7:
 				select {
 				case <-Ch7:
-					if Status7 == true {
-						ClosedLEDs(P)
-						Status7 = false
-						beego.Info(f)
-						return err
-					}
-					Status7 = true
+					ClosedLEDs(P)
+					Status7 = false
+					beego.Info(f)
+					return err
 				default:
 					Status7 = true
 					time.Sleep(1 * time.Millisecond)
