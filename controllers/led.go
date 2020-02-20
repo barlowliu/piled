@@ -358,9 +358,9 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 	var i int64
 	f := fmt.Sprintf("第%d其他LED开启，协程被中断", Gid)
 	err := errors.New(f)
-	var j int64 = Waittime
 	for i = 0; i < Waittime; i += Tx2 {
 		OpenLEDs(P)
+		var j int64 = i
 		for t := 0; t < T && j < Waittime; t++ {
 			switch Gid {
 			case 1:
