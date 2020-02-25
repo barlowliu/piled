@@ -12,6 +12,7 @@ import (
 
 func main() {
 	beego.SetLogger("file", `{"filename":"logs/piled.log"}`)
+	beego.BeeLogger.DelLogger("console") //不在控制台显示日志
 	// 初始化树莓派
 	controllers.Init()
 	// 注册到调用服务器

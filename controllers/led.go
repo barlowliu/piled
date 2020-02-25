@@ -369,7 +369,7 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				case <-Ch1:
 					ClosedLEDs(P)
 					Status1 = false
-					beego.Info(f)
+					beego.Informational(f)
 					return err
 
 				default:

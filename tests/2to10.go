@@ -15,6 +15,6 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	P, Gid := controllers.Oid2Pin(71)
+	P, Gid := controllers.Oid2Pin(28)
 	beego.Info(P, Gid)
 }

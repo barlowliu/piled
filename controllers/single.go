@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
+	"github.com/stianeikeland/go-rpio"
 	"strconv"
 	"time"
 )
@@ -84,11 +85,11 @@ func (c *LedController) Single() {
 			Ch <- "stop"
 		}
 		time.Sleep(8 * time.Millisecond) //等待协程关闭
-		//关闭所有灯
-		//for i := 0; i < 29; i++ {
-		//	pin := rpio.Pin(i)
-		//	pin.Write(rpio.Low)
-		//}
+		//再次关闭所有灯
+		for i := 0; i < 29; i++ {
+			pin := rpio.Pin(i)
+			pin.Write(rpio.Low)
+		}
 		//获取oid对应的Map
 		P, Gid = Oid2Pin(Oid)
 		// 如果传入了闪烁时间并且大于20毫秒，则闪烁
