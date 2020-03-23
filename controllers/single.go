@@ -127,14 +127,19 @@ func (c *LedController) Single() {
 //Flashs 闪烁LED的开启控制
 //使用管道实现协程退出控制
 func Flashs(Gid, Waittime, Flashtime int64, P map[int]string) error {
-	T := int(Flashtime)
-	Tx2 := 2 * Flashtime //2倍闪亮时间
-	var i int64
-	for i = 0; i < Waittime; i += Tx2 {
+	startTime := time.Now() // 开始时间
+	endTime := time.Duration(Waittime) * time.Millisecond //总亮灯时长
+	fTime :=  time.Duration(Flashtime) * time.Millisecond //闪烁间隔时长
+	//T := int(Flashtime)
+	//Tx2 := 2 * Flashtime //2倍闪亮时间
+	//var i int64
+	//for i = 0; i < Waittime; i += Tx2 {
+	for {
 		OpenLEDs(P)
 		Status = true
-		j := i //控制循环内部时长,避免延迟关闭
-		for t := 0; t < T && j < Waittime; t++ {
+		//j := i //控制循环内部时长,避免延迟关闭
+		//for t := 0; t < T && j < Waittime; t++ {
+		for st := time.Now(); time.Since(st) < fTime; {
 			select {
 			case <-Ch:
 				ClosedLEDs(P)
@@ -144,12 +149,18 @@ func Flashs(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				beego.Info(err)
 				return err
 			default:
-				time.Sleep(1 * time.Millisecond)
-				j++
+				runTime := time.Since(startTime) //获取函数已经执行的时长
+				if runTime > endTime {
+					Status = false
+					return nil
+				}
+				//time.Sleep(1 * time.Millisecond)
+				//j++
 			}
 		}
 		ClosedLEDs(P)
-		for t := 0; t < T && j < Waittime; t++ {
+		//for t := 0; t < T && j < Waittime; t++ {
+		for st := time.Now(); time.Since(st) < fTime; {
 			select {
 			case <-Ch:
 				f := fmt.Sprintf("关闭第%d组协程", Gid)
@@ -158,14 +169,19 @@ func Flashs(Gid, Waittime, Flashtime int64, P map[int]string) error {
 				Status = false
 				return err
 			default:
-				time.Sleep(1 * time.Millisecond)
-				j++
+				runTime := time.Since(startTime) //获取函数已经执行的时长
+				if runTime > endTime {
+					Status = false
+					return nil
+				}
+				//time.Sleep(1 * time.Millisecond)
+				//j++
 			}
 		}
 	}
-	ClosedLEDs(P)
-	Status = false
-	return nil
+	//ClosedLEDs(P)
+	//Status = false
+	//return nil
 }
 
 ////OpenLeds 闪烁LED的开启控制
@@ -184,7 +200,9 @@ func Flashs(Gid, Waittime, Flashtime int64, P map[int]string) error {
 //使用管道实现协程退出控制
 func Opens(Gid, Waittime int64, P map[int]string) error {
 	OpenLEDs(P)
-	var T int64 = 0
+	startTime := time.Now() // get current time
+	endTime := time.Duration(Waittime) * time.Millisecond
+	//var T int64 = 0
 	Status = true
 	for {
 		select {
@@ -196,13 +214,15 @@ func Opens(Gid, Waittime int64, P map[int]string) error {
 			beego.Error(err)
 			return err
 		default:
-			if T >= Waittime {
+			//if T >= Waittime {
+			runTime := time.Since(startTime) //获取函数已经执行的时长
+			if runTime > endTime {
 				ClosedLEDs(P)
 				Status = false
 				return nil
 			}
-			time.Sleep(1 * time.Millisecond)
-			T++
+			//time.Sleep(1 * time.Millisecond)
+			//T++
 		}
 	}
 }
