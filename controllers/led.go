@@ -184,7 +184,7 @@ func (c *LedController) Get() {
 			}
 		}
 		//等待一会再开始协程事务，避免新开协程抢占此前发送的协程信号
-		time.Sleep(5 * time.Millisecond)
+		time.Sleep(8 * time.Millisecond)
 		// 如果传入了闪烁时间，则在持续闪烁
 		if Flashtime > 0 {
 			beego.Info("开始第", Gid, "组协程事务")
@@ -242,8 +242,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status1 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		case 2:
 			select {
@@ -260,8 +258,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status2 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		case 3:
 			select {
@@ -278,8 +274,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status3 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		case 4:
 			select {
@@ -296,8 +290,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status4 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		case 5:
 			select {
@@ -314,8 +306,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status5 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		case 6:
 			select {
@@ -332,8 +322,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status6 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		case 7:
 			select {
@@ -350,8 +338,6 @@ func OpenGroups(Gid, Waittime int64, P map[int]string) error {
 					return nil
 				}
 				Status7 = true
-				//time.Sleep(1 * time.Millisecond)
-				//T++
 			}
 		default:
 			err = errors.New("Gid错误")
@@ -375,8 +361,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 	//for i = 0; i < Waittime; i += Tx2 {
 	for {
 		OpenLEDs(P)
-		//j = i
-		//for t := 0; t < T && j < Waittime; t++ {
 		for st := time.Now(); time.Since(st) < fTime; {
 			switch Gid {
 			case 1:
@@ -395,8 +379,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status1 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 2:
 				select {
@@ -413,8 +395,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status2 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 3:
 				select {
@@ -431,8 +411,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status3 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 4:
 				select {
@@ -449,8 +427,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status4 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 5:
 				select {
@@ -467,8 +443,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status5 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 6:
 				select {
@@ -485,8 +459,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status6 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 7:
 				select {
@@ -503,8 +475,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						return nil
 					}
 					Status7 = true
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			default:
 				err := errors.New("Gid错误")
@@ -512,7 +482,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 			}
 		}
 		ClosedLEDs(P)
-		//for t := 0; t < T && j < Waittime; t++ {
 		for st := time.Now(); time.Since(st) < fTime; {
 			switch Gid {
 			case 1:
@@ -527,8 +496,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status1 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 2:
 				select {
@@ -542,8 +509,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status2 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 3:
 				select {
@@ -557,8 +522,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status3 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 4:
 				select {
@@ -572,8 +535,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status4 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 5:
 				select {
@@ -587,8 +548,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status5 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 6:
 				select {
@@ -602,8 +561,6 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status6 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			case 7:
 				select {
@@ -617,30 +574,10 @@ func FlashGroups(Gid, Waittime, Flashtime int64, P map[int]string) error {
 						Status7 = false
 						return nil
 					}
-					//time.Sleep(1 * time.Millisecond)
-					//j++
 				}
 			}
 		}
 	}
-	//ClosedLEDs(P)
-	//switch Gid {
-	//case 1:
-	//	Status1 = false
-	//case 2:
-	//	Status2 = false
-	//case 3:
-	//	Status3 = false
-	//case 4:
-	//	Status4 = false
-	//case 5:
-	//	Status5 = false
-	//case 6:
-	//	Status6 = false
-	//case 7:
-	//	Status7 = false
-	//}
-	//return nil
 }
 
 // OpenLED() 打开LED

@@ -174,27 +174,7 @@ func Flashs(Gid, Waittime, Flashtime int64, P map[int]string) error {
 					Status = false
 					return nil
 				}
-				//time.Sleep(1 * time.Millisecond)
-				//j++
-			}
-		}
-	}
-	//ClosedLEDs(P)
-	//Status = false
-	//return nil
 }
-
-////OpenLeds 闪烁LED的开启控制
-////使用管道实现协程退出控制
-//func OpenLeds(Gid, Waittime int64, P map[int]string) error {
-//	var T = int(Waittime)
-//	OpenLEDs(P)
-//	time.Sleep(time.Duration(T) * time.Millisecond)
-//	ClosedLEDs(P)
-//	f := fmt.Sprintf("第%d组第%d 号灯闪烁时长%d 毫秒后正常关闭", Gid, P, Waittime)
-//	err := errors.New(f)
-//	return err
-//}
 
 //Opens 无闪烁LED的开启控制
 //使用管道实现协程退出控制
@@ -202,7 +182,6 @@ func Opens(Gid, Waittime int64, P map[int]string) error {
 	OpenLEDs(P)
 	startTime := time.Now() // get current time
 	endTime := time.Duration(Waittime) * time.Millisecond
-	//var T int64 = 0
 	Status = true
 	for {
 		select {
@@ -214,15 +193,12 @@ func Opens(Gid, Waittime int64, P map[int]string) error {
 			beego.Error(err)
 			return err
 		default:
-			//if T >= Waittime {
 			runTime := time.Since(startTime) //获取函数已经执行的时长
 			if runTime > endTime {
 				ClosedLEDs(P)
 				Status = false
 				return nil
 			}
-			//time.Sleep(1 * time.Millisecond)
-			//T++
 		}
 	}
 }
